@@ -43,6 +43,9 @@ public class PlayerController : MonoBehaviour
         } 
     }
 
+    private Touch theTouch;
+    private Vector2 touchStartPosition, touchEndPosition;
+
     // Use this for initialization
     void Start()
     {
@@ -79,12 +82,52 @@ public class PlayerController : MonoBehaviour
         rb2d.AddForce(movement * speed);
     }
 
+    private void Update()
+    {
+        if (Input.touchCount > 0)
+        {
+            theTouch = Input.GetTouch(0);
+
+            if (theTouch.phase == TouchPhase.Began)
+            {
+                touchStartPosition = theTouch.position;
+            }
+
+            else if (theTouch.phase == TouchPhase.Moved || theTouch.phase == TouchPhase.Ended)
+            {
+                touchEndPosition = theTouch.position;
+
+                float x = touchEndPosition.x - touchStartPosition.x;
+                float y = touchEndPosition.y - touchStartPosition.y;
+
+                Vector2 force;
+
+                if (Mathf.Abs(x) > Mathf.Abs(y))
+                {
+                    force = Vector2.right;
+
+                    if (x < 0)
+                        force = Vector2.left;
+                }
+                else
+                {
+                    force = Vector2.up;
+
+                    if (y < 0)
+                        force = Vector2.down;
+                }
+
+                rb2d.AddForce(force * speed);
+            }
+        }
+    }
+
     //OnTriggerEnter2D is called whenever this object overlaps with a trigger collider.
     void OnTriggerEnter2D(Collider2D other)
     {
         Health -= 20;
         //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
-        if (other.gameObject.CompareTag("PickUp"))
+        if (other.gameObject.CompareTag("Player"))
         {
             //... then set the other object we just collided with to inactive.
             other.gameObject.SetActive(false);
