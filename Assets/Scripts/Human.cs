@@ -1,4 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+
+public enum Symptoms
+{
+    cCough,
+    cSneeze,
+    cBreathless,
+    cFever,
+}
 
 public class Human : MonoBehaviour
 {
@@ -14,20 +23,13 @@ public class Human : MonoBehaviour
 
     enum HealthState
     {
-        cHealthy,
+        cHealthy, // never been infected before
         cInfected,
         cRecovered // human recovered after being infected 
     };
     private HealthState m_state;
 
-    enum Symptoms
-    {
-        cNone, // human is healthy
-        cCough,
-        cSneeze,
-        cBreathless,
-        cFever
-    }
+    
     private Symptoms[] m_symptoms;
 
     private int m_health;
@@ -58,6 +60,20 @@ public class Human : MonoBehaviour
                 m_spriteRenderer.color = gradient.Evaluate(m_health / 100f);
             }
         }
+    }
+
+    internal void Infect(Symptoms symptom)
+    {
+        // if a human has recovered, lets assume he can't be infected again
+        if (m_state == HealthState.cRecovered)
+            return;
+
+        if(m_symptoms == null)
+        {
+            m_symptoms = new Symptoms[4];
+        }
+
+        m_state = HealthState.cInfected;
     }
 
     private SpriteRenderer m_spriteRenderer;

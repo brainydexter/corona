@@ -26,7 +26,8 @@ public class HumanManager : MonoBehaviour
             }
         }
 
-        
+        int randomIndex = Random.Range(0, N);
+        m_humans[randomIndex].Infect(Symptoms.cCough);
     }
 
     // Update is called once per frame
