@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ public class HumanManager : MonoBehaviour
     {
         Debug.Assert(m_pHuman != null, "Human prefab not assigned");
 
-        int N = Random.Range(2, 5);
+        //int N = Random.Range(2, 5);
+        int N = 2;
 
         m_humans = new Human[N];
 
@@ -18,15 +20,15 @@ public class HumanManager : MonoBehaviour
 
             if(i % 2 == 0)
             {
-                m_humans[i].transform.position = new Vector3(0, Random.Range(1, 10.5f), 0);
+                m_humans[i].transform.position = new Vector3(0, UnityEngine.Random.Range(1, 10.5f), 0);
             }
             else
             {
-                m_humans[i].transform.position = new Vector3(Random.Range(1, 10.5f), 0, 0);
+                m_humans[i].transform.position = new Vector3(UnityEngine.Random.Range(1, 10.5f), 0, 0);
             }
         }
 
-        int randomIndex = Random.Range(0, N);
+        int randomIndex = UnityEngine.Random.Range(0, N);
         m_humans[randomIndex].Infect(Symptoms.cCough);
     }
 
