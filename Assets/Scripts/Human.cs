@@ -28,10 +28,10 @@ public class Human : MonoBehaviour
         cRecovered // human recovered after being infected 
     };
     private HealthState m_state;
-
     
     private Symptoms[] m_symptoms;
 
+    [SerializeField]
     private int m_health;
     public int Health
     {
@@ -62,19 +62,56 @@ public class Human : MonoBehaviour
         }
     }
 
+    private SpriteRenderer m_spriteRenderer;
+
     internal void Infect(Symptoms symptom)
     {
         // if a human has recovered, lets assume he can't be infected again
         if (m_state == HealthState.cRecovered)
             return;
 
-        if(m_symptoms == null)
+        if (m_symptoms == null)
         {
             m_symptoms = new Symptoms[4];
         }
 
         m_state = HealthState.cInfected;
+
+        Health = 50;
     }
 
-    private SpriteRenderer m_spriteRenderer;
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        Human otherHuman = other.gameObject.GetComponent<Human>();
+
+        if(otherHuman != null)
+        {
+            /*
+             * 1 - Healthy, 0 - Infected
+             * 
+             * M    1    0    1    0
+             * O    1    0    0    1
+             *      N    N    M0   Oo
+             */
+
+            if( (
+                (m_state == HealthState.cHealthy) ||
+                (m_state == HealthState.cInfected))
+                &&
+                (m_state == otherHuman.m_state))
+            {
+                return;
+            }
+
+            if(m_state == HealthState.cHealthy)
+            {
+                Health -= 10;
+            }
+
+            m_state = HealthState.cInfected;
+
+            Debug.Log("I: " + name + " Collided with other human: " + otherHuman.name);
+
+        }
+    }
 }

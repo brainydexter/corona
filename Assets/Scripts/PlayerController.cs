@@ -88,26 +88,6 @@ public class PlayerController : Human
         }
     }
 
-    //OnTriggerEnter2D is called whenever this object overlaps with a trigger collider.
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        Health -= 20;
-        //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
-        if (other.gameObject.CompareTag("Player"))
-        {
-            //... then set the other object we just collided with to inactive.
-            other.gameObject.SetActive(false);
-
-            //Add one to the current value of our count variable.
-            count = count + 1;
-
-            //Update the currently displayed count by calling the SetCountText function.
-            //SetCountText();
-        }
-
-
-    }
-
     //This function updates the text displaying the number of objects we've collected and displays our victory message if we've collected all of them.
     void SetCountText()
     {
