@@ -3,6 +3,7 @@ using UnityEngine;
 
 public enum Symptoms
 {
+    cNone = 0,
     cCough,
     cSneeze,
     cBreathless,
@@ -27,8 +28,11 @@ public class Human : MonoBehaviour
         cInfected,
         cRecovered // human recovered after being infected 
     };
+
+    [SerializeField]
     private HealthState m_state;
-    
+
+    [SerializeField]
     private Symptoms[] m_symptoms;
 
     [SerializeField]
@@ -66,6 +70,8 @@ public class Human : MonoBehaviour
 
     internal void Infect(Symptoms symptom)
     {
+        Debug.Assert(symptom != Symptoms.cNone, "cannot be infected with no symptoms");
+
         // if a human has recovered, lets assume he can't be infected again
         if (m_state == HealthState.cRecovered)
             return;
@@ -73,6 +79,21 @@ public class Human : MonoBehaviour
         if (m_symptoms == null)
         {
             m_symptoms = new Symptoms[4];
+        }
+
+        // find if human is already infected with the same symptom
+        bool symptomExists = Array.Find(m_symptoms, s => s == symptom) == symptom;
+
+        Debug.Log("to infect: " + (symptomExists == false));
+
+        // try to infect 
+        for (int i = 0; symptomExists && (i < m_symptoms.Length); ++i)
+        {
+            if(m_symptoms[i] == Symptoms.cNone)
+            {
+                m_symptoms[i] = symptom;
+                break;
+            }
         }
 
         m_state = HealthState.cInfected;
@@ -105,10 +126,8 @@ public class Human : MonoBehaviour
 
             if(m_state == HealthState.cHealthy)
             {
-                Health -= 10;
+                Infect(otherHuman.m_symptoms[0]);
             }
-
-            m_state = HealthState.cInfected;
 
             Debug.Log("I: " + name + " Collided with other human: " + otherHuman.name);
 
