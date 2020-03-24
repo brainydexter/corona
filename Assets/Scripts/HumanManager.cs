@@ -40,6 +40,7 @@ public class HumanManager : MonoBehaviour
 
     private void Start()
     {
+        m_humans[0].Infect(Symptoms.cCough);
         m_humans[0].m_rigidBody.AddForce(UnityEngine.Random.insideUnitCircle * 500f);
     }
 
