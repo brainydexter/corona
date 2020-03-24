@@ -10,17 +10,46 @@ public enum Symptoms
     cFever,
 }
 
+public class HealthStateMachine : StateMachine
+{
+
+}
+
+//public class HealthyState : IState
+//{
+//}
+
+//public class CoughingState : IState
+//{
+//}
+
+//public class DeadState : IState
+//{
+//}
+
+//public class RecoveredState : IState
+//{
+//}
+
 public class Human : MonoBehaviour
 {
     private void Awake()
     {
         m_spriteRenderer = GetComponent<SpriteRenderer>();
 
+        //Get and store a reference to the Rigidbody2D component so that we can access it.
+        m_rigidBody = GetComponent<Rigidbody2D>();
+
+        m_healthStateMachine = new HealthStateMachine();
+        //m_healthStateMachine.initialize(new HealthyState());
+
         m_state = HealthState.cHealthy;
         Health = 100;
 
         m_symptoms = null; // no symptoms exist on a new healthy human
     }
+
+    HealthStateMachine m_healthStateMachine;
 
     enum HealthState
     {
@@ -66,8 +95,16 @@ public class Human : MonoBehaviour
         }
     }
 
-    private SpriteRenderer m_spriteRenderer;
+    public float m_speed = 12.5f;             //Floating point variable to store the player's movement speed.
 
+    private SpriteRenderer m_spriteRenderer;
+    public Rigidbody2D m_rigidBody;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
+
+    /// <summary>
+    /// Infect iff human is healthy. Infected humans are not affected when they come in contact with another infected human
+    /// Healthy -> Cough | Sneeze -> Breathlessnes -> Die | Recover
+    /// </summary>
+    /// <param name="symptom"></param>
     internal void Infect(Symptoms symptom)
     {
         Debug.Assert(symptom == Symptoms.cNone, "cannot be infected with no symptoms");
