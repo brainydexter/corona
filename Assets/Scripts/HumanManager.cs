@@ -9,8 +9,7 @@ public class HumanManager : MonoBehaviour
     {
         Debug.Assert(m_pHuman != null, "Human prefab not assigned");
 
-        //int N = Random.Range(2, 5);
-        int N = 33;
+        int N = 16;
 
         int dia = 4;
         int extents = 24;
@@ -41,7 +40,7 @@ public class HumanManager : MonoBehaviour
     private void Start()
     {
         m_humans[0].Infect(Symptoms.cCough);
-        m_humans[0].m_rigidBody.AddForce(UnityEngine.Random.insideUnitCircle * 500f);
+        m_humans[0].m_rigidBody.AddForce(UnityEngine.Random.insideUnitCircle * 250f);
     }
 
     // Update is called once per frame
