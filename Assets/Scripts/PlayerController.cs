@@ -13,12 +13,16 @@ public class PlayerController : MonoBehaviour
     private Touch theTouch;
     private Vector2 touchStartPosition, touchEndPosition;
 
-    private Human m_human;
+    private Rigidbody2D m_rigidBody;
+
+    private Vector3 mousePosition;
+    private Vector2 direction;
+    private float moveSpeed = 100f;
 
     // Use this for initialization
     void Awake()
     {
-        m_human = GetComponent<Human>();
+        m_rigidBody = GetComponent<Rigidbody2D>();
 
         //Initialize count to zero.
         count = 0;
@@ -33,17 +37,16 @@ public class PlayerController : MonoBehaviour
     //FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
     void FixedUpdate()
     {
-        //Store the current horizontal input in the float moveHorizontal.
-        float moveHorizontal = Input.GetAxis("Horizontal");
-
-        //Store the current vertical input in the float moveVertical.
-        float moveVertical = Input.GetAxis("Vertical");
-
-        //Use the two store floats to create a new Vector2 variable movement.
-        Vector2 movement = new Vector2(moveHorizontal, moveVertical);
-
-        //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
-        m_human.m_rigidBody.AddForce(movement * m_human.m_speed);
+        if (Input.GetMouseButton(0))
+        {
+            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            direction = (mousePosition - transform.position).normalized;
+            m_rigidBody.velocity = new Vector2(direction.x * moveSpeed, direction.y * moveSpeed);
+        }
+        else
+        {
+            m_rigidBody.velocity = Vector2.zero;
+        }
     }
 
     private void Update()
@@ -66,22 +69,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector2 force;
 
-                if (Mathf.Abs(x) > Mathf.Abs(y))
-                {
-                    force = Vector2.right;
-
-                    if (x < 0)
-                        force = Vector2.left;
-                }
-                else
-                {
-                    force = Vector2.up;
-
-                    if (y < 0)
-                        force = Vector2.down;
-                }
-
-                m_human.m_rigidBody.AddForce(force * m_human.m_speed);
+               
             }
         }
     }
