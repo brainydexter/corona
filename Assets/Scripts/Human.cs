@@ -10,27 +10,6 @@ public enum Symptoms
     cFever,
 }
 
-public class HealthStateMachine : StateMachine
-{
-
-}
-
-//public class HealthyState : IState
-//{
-//}
-
-//public class CoughingState : IState
-//{
-//}
-
-//public class DeadState : IState
-//{
-//}
-
-//public class RecoveredState : IState
-//{
-//}
-
 public class Human : MonoBehaviour
 {
     private void Awake()
@@ -49,63 +28,22 @@ public class Human : MonoBehaviour
         m_symptoms = null; // no symptoms exist on a new healthy human
     }
 
-    HealthStateMachine m_healthStateMachine;
-
-    enum HealthState
+    private void Update()
     {
-        cHealthy, // never been infected before
-        cInfected,
-        cRecovered // human recovered after being infected 
-    };
-
-    [SerializeField]
-    private HealthState m_state;
-
-    [SerializeField]
-    private Symptoms[] m_symptoms;
-
-    [SerializeField]
-    private int m_health;
-    public int Health
-    {
-        get { return m_health; }
-        set
-        {
-            if (m_health != value)
-            {
-                m_health = Mathf.Clamp(value, 0, 100);
-
-                Gradient gradient = new Gradient();
-                GradientColorKey[] colorKeys = new GradientColorKey[2];
-                colorKeys[0].color = Color.red;
-                colorKeys[0].time = 0.0f;
-                colorKeys[1].color = Color.green;
-                colorKeys[1].time = 1.0f;
-
-                GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
-                alphaKeys[0].alpha = 1.0f;
-                alphaKeys[0].time = 0.0f;
-                alphaKeys[1].alpha = 1.0f;
-                alphaKeys[1].time = 1.0f;
-
-                gradient.SetKeys(colorKeys, alphaKeys);
-
-                m_spriteRenderer.color = gradient.Evaluate(m_health / 100f);
-            }
-        }
+        m_healthStateMachine.Update();
     }
 
-    public float m_speed = 12.5f;             //Floating point variable to store the player's movement speed.
-
-    private SpriteRenderer m_spriteRenderer;
-    public Rigidbody2D m_rigidBody;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
+    public void InfectWithCough()
+    {
+        m_healthStateMachine.InfectWithCough();
+    }
 
     /// <summary>
     /// Infect iff human is healthy. Infected humans are not affected when they come in contact with another infected human
     /// Healthy -> Cough | Sneeze -> Breathlessnes -> Die | Recover
     /// </summary>
     /// <param name="symptom"></param>
-    internal void Infect(Symptoms symptom)
+    private void Infect(Symptoms symptom)
     {
         Debug.Assert(symptom == Symptoms.cNone, "cannot be infected with no symptoms");
 
@@ -170,4 +108,55 @@ public class Human : MonoBehaviour
 
         }
     }
+
+    HealthStateMachine m_healthStateMachine;
+
+    enum HealthState
+    {
+        cHealthy, // never been infected before
+        cInfected,
+        cRecovered // human recovered after being infected 
+    };
+
+    [SerializeField]
+    private HealthState m_state;
+
+    [SerializeField]
+    private Symptoms[] m_symptoms;
+
+    [SerializeField]
+    private int m_health;
+    public int Health
+    {
+        get { return m_health; }
+        set
+        {
+            if (m_health != value)
+            {
+                m_health = Mathf.Clamp(value, 0, 100);
+
+                Gradient gradient = new Gradient();
+                GradientColorKey[] colorKeys = new GradientColorKey[2];
+                colorKeys[0].color = Color.red;
+                colorKeys[0].time = 0.0f;
+                colorKeys[1].color = Color.green;
+                colorKeys[1].time = 1.0f;
+
+                GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
+                alphaKeys[0].alpha = 1.0f;
+                alphaKeys[0].time = 0.0f;
+                alphaKeys[1].alpha = 1.0f;
+                alphaKeys[1].time = 1.0f;
+
+                gradient.SetKeys(colorKeys, alphaKeys);
+
+                m_spriteRenderer.color = gradient.Evaluate(m_health / 100f);
+            }
+        }
+    }
+
+    public float m_speed = 12.5f;             //Floating point variable to store the player's movement speed.
+
+    private SpriteRenderer m_spriteRenderer;
+    public Rigidbody2D m_rigidBody;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
 }
