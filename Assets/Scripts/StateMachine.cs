@@ -1,17 +1,31 @@
 ﻿using System;
 
-public interface IState
+public abstract class IState<T_DATA>
 {
-    void Enter();
-    void Update();
-    void Exit();
+    public IState(StateMachine<T_DATA> stateMachine, ref T_DATA data)
+    {
+        m_stateMachine = stateMachine;
+        m_data = data;
+    }
+
+    public void Enter() { }
+    public virtual void Update() { }
+    public void Exit() { }
+
+    protected void ChangeState(IState<T_DATA> nextState)
+    {
+        m_stateMachine.ChangeState(nextState);
+    }
+
+    private StateMachine<T_DATA> m_stateMachine;
+    protected T_DATA m_data;
 }
 
-public class StateMachine
+public class StateMachine<T_DATA>
 {
-    protected IState m_currentState;
+    protected IState<T_DATA> m_currentState;
 
-    public void ChangeState(IState newState)
+    public void ChangeState(IState<T_DATA> newState)
     {
         if (m_currentState != null)
             m_currentState.Exit();
@@ -25,4 +39,6 @@ public class StateMachine
         if (m_currentState != null) 
             m_currentState.Update();
     }
+
+    protected T_DATA m_data;
 }
