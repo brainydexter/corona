@@ -42,7 +42,7 @@ public class HumanManager : MonoBehaviour
     private void Start()
     {
         m_humans[0].InfectWithCough();
-        m_humans[0].m_rigidBody.AddForce(UnityEngine.Random.insideUnitCircle * 350f);
+        m_humans[0].m_rigidBody.AddForce(2f * UnityEngine.Random.insideUnitCircle * 300f); // since mass is 0.5
     }
 
     // Update is called once per frame
