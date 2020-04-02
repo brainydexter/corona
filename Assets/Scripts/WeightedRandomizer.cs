@@ -61,6 +61,7 @@ public sealed class WeightedRandomizer<T>
 
     public WeightedRandomizer()
     {
+        m_weights = new List<MenuEntry<T, int>>();
     }
 
     ~WeightedRandomizer()
