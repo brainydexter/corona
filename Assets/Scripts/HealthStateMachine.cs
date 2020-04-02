@@ -26,10 +26,8 @@ class CoughingState : IState<HealthData>
 
     public override void Update()
     {
-        base.Update();
-
-
         m_data.m_duration += Time.deltaTime;
+        m_data.m_human.Health = (int)UnityEngine.Mathf.Lerp(100f, 35f, m_data.m_duration / m_data.m_config.cCoughDuration);
 
         if (m_data.m_duration > m_data.m_config.cCoughDuration)
         {
@@ -50,6 +48,7 @@ class DeadState : IState<HealthData>
     public override void Enter()
     {
         m_data.m_human.Health = 0;
+        m_data.m_human.gameObject.SetActive(false);
     }
 }
 
@@ -67,8 +66,8 @@ class RecoveredState : IState<HealthData>
 
 public class HealthConfig
 {
-    public readonly float cCoughDuration = 5f;
-    public readonly int cDeadWeight = 50; // 0 - 100
+    public readonly float cCoughDuration = 10f;
+    public readonly int cDeadWeight = 30; // 0 - 100
 }
 
 public class HealthData
