@@ -5,6 +5,7 @@ class HealthyState : IState<HealthData>
 {
     public HealthyState(HealthStateMachine stateMachine, ref HealthData data) : base(stateMachine, ref data)
     {
+        m_data.m_human.Health = 100;
         m_data.m_duration = 0f;
     }
 }
@@ -18,9 +19,15 @@ class CoughingState : IState<HealthData>
         m_randomizer.AddWeight(new MenuEntry<IState<HealthData>, int>(new RecoveredState(stateMachine, ref data), 100 - m_data.m_config.cDeadWeight));
     }
 
+    public override void Enter()
+    {
+        m_data.m_human.Health = 80;
+    }
+
     public override void Update()
     {
         base.Update();
+
 
         m_data.m_duration += Time.deltaTime;
 
@@ -39,6 +46,11 @@ class DeadState : IState<HealthData>
     public DeadState(HealthStateMachine stateMachine, ref HealthData data) : base(stateMachine, ref data)
     {
     }
+
+    public override void Enter()
+    {
+        m_data.m_human.Health = 0;
+    }
 }
 
 class RecoveredState : IState<HealthData>
@@ -46,33 +58,40 @@ class RecoveredState : IState<HealthData>
     public RecoveredState(HealthStateMachine stateMachine, ref HealthData data) : base(stateMachine, ref data)
     {
     }
+
+    public override void Enter()
+    {
+        m_data.m_human.Health = 30;
+    }
 }
 
 public class HealthConfig
 {
-    public readonly float cCoughDuration = 10f;
-    public readonly int cDeadWeight = 20; // 0 - 100
+    public readonly float cCoughDuration = 5f;
+    public readonly int cDeadWeight = 50; // 0 - 100
 }
 
 public class HealthData
 {
-    public HealthData(HealthConfig config)
+    public HealthData(Human human, HealthConfig config)
     {
+        m_human = human;
         m_config = config;
     }
 
-    public HealthConfig m_config;
+    public Human m_human;
     public float m_duration = 0f;
+
+    public HealthConfig m_config;
 }
 
 public partial class HealthStateMachine : StateMachine<HealthData>
 {
-    public HealthStateMachine()
+    public HealthStateMachine(Human human)
     {
-        m_data = new HealthData(new HealthConfig());
+        m_data = new HealthData(human, new HealthConfig());
 
         ChangeState(new HealthyState(this, ref m_data));
-
     }
 
     public void InfectWithCough()
