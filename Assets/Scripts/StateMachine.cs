@@ -8,9 +8,9 @@ public abstract class IState<T_DATA>
         m_data = data;
     }
 
-    public void Enter() { }
+    public virtual void Enter() { }
     public virtual void Update() { }
-    public void Exit() { }
+    public virtual void Exit() { }
 
     protected void ChangeState(IState<T_DATA> nextState)
     {
