@@ -82,6 +82,8 @@ public class Human : MonoBehaviour
 
         if(otherHuman != null)
         {
+            Infect(otherHuman.HealthState1);
+
             /*
              * 1 - Healthy, 0 - Infected
              * 
@@ -109,7 +111,13 @@ public class Human : MonoBehaviour
         }
     }
 
+    private void Infect(in HealthStateMachine otherHealthState)
+    {
+        m_healthStateMachine.Infect(otherHealthState);
+    }
+
     HealthStateMachine m_healthStateMachine;
+    public HealthStateMachine HealthState1 { get { return m_healthStateMachine; } }
 
     enum HealthState
     {
