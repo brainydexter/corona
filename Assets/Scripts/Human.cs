@@ -20,7 +20,6 @@ public class Human : MonoBehaviour
         m_rigidBody = GetComponent<Rigidbody2D>();
 
         m_healthStateMachine = new HealthStateMachine(this);
-        //m_healthStateMachine.initialize(new HealthyState());
 
         Health = 100;
     }
@@ -42,9 +41,6 @@ public class Human : MonoBehaviour
         if(otherHuman != null)
         {
             Infect(otherHuman.HealthState);
-
-            Debug.Log("I: " + name + " Collided with other human: " + otherHuman.name);
-
         }
     }
 
